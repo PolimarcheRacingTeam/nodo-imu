@@ -212,7 +212,7 @@ typedef struct
   uint32_t DLC;         /*!< Specifies the length of the frame that will be received.
                              This parameter must be a number between Min_Data = 0 and Max_Data = 8. */
 
-  uint8_t Data[8];      /*!< Contains the data to be received. 
+  uint8_t Data[6];      /*!< Contains the data to be received.
                              This parameter must be a number between Min_Data = 0 and Max_Data = 0xFF. */
 
   uint32_t FMI;         /*!< Specifies the index of the filter the message stored in the mailbox passes through.
@@ -221,7 +221,7 @@ typedef struct
   uint32_t FIFONumber;  /*!< Specifies the receive FIFO number. 
                              This parameter can be CAN_FIFO0 or CAN_FIFO1 */
                        
-}CanRxMsgTypeDef;
+} CanRxMsgTypeDef;
 
 /** 
   * @brief  CAN handle Structure definition  
