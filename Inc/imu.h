@@ -1,8 +1,8 @@
 /*
  * imu.h
  *
- *  Created on: Jun 10, 2017
- *      Author: Seb
+ *  Created on: 26 Marzo 2018
+ *      Author: Francesco Conforte
  */
 
 #ifndef IMU_H_

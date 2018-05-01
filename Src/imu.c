@@ -14,6 +14,9 @@
 
 imudata imu;
 float ax=0,ay=0,az=0,gx=0,gy=0,gz=0;
+
+
+
 int imu_read(){
 	imu_read_raw();
 
@@ -98,11 +101,11 @@ int imu_cal(void) {
 	for(int i=0;i<=50;i++)   {
 		while (err!=0)   {
 			err=imu_read_nc();
-		    if (err==0) continue;
-		    else   {
-		    	printf("Dati non letti...\n\r");
-		  		err = imu_read_nc();
-		    }
+			if (err==0) continue;
+			else   {
+				printf("Dati non letti...\n\r");
+				err = imu_read_nc();
+			}
 		}
 		accx_sum+=imu.acc.x*1000;
 		accy_sum+=imu.acc.y*1000;
@@ -111,22 +114,15 @@ int imu_cal(void) {
 		pitch_sum+=imu.gyr.x*1000;
 		roll_sum+=imu.gyr.y*1000;
 		yaw_sum+=imu.gyr.z*1000;
-    }
+	}
 
 	ax=accx_sum/50;
 	ay=accy_sum/50;
 	az=accz_sum/50;
+
 	gx=pitch_sum/50;
 	gy=roll_sum/50;
 	gz=yaw_sum/50;
-
-	/*printf("L'accelerazione lungo x e': %f\n\r",ax);
-	printf("L'accelerazione lungo y e': %f\n\r",ay);
-	printf("L'accelerazione lungo z e': %f\n\r",az);
-
-	printf("Il rollio     (roll)  e': %f \n\r",gx);
-	printf("Il beccheggio (pitch) e': %f \n\r",gy);
-	printf("L' imbardata  (yaw)   e': %f \n\r",gz);*/
 
 	return 0;
 }
