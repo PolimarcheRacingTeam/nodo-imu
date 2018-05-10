@@ -13,19 +13,19 @@
 
 
 imudata imu;
-float ax=0,ay=0,az=0,gx=0,gy=0,gz=0;
+float ax_cal=0,ay_cal=0,az_cal=0,gx_cal=0,gy_cal=0,gz_cal=0;
 
 
 
 int imu_read(){
 	imu_read_raw();
 
-	imu.acc.x=((float)imu.rawacc[0]/imu.acc_sens)-ax;
-	imu.gyr.x=((float)imu.rawgyr[0]/imu.gyr_sens*0.01745329252)-gx; //rad
-	imu.acc.y=((float)imu.rawacc[1]/imu.acc_sens)-ay;
-	imu.gyr.y=((float)imu.rawgyr[1]/imu.gyr_sens*0.01745329252)-gy; //rad
-	imu.acc.z=((float)imu.rawacc[2]/imu.acc_sens)-az;
-	imu.gyr.z=((float)imu.rawgyr[2]/imu.gyr_sens*0.01745329252)-gz; //rad
+	imu.acc.x=((float)imu.rawacc[0]/imu.acc_sens)-ax_cal;
+	imu.gyr.x=((float)imu.rawgyr[0]/imu.gyr_sens*0.01745329252)-gx_cal; //rad
+	imu.acc.y=((float)imu.rawacc[1]/imu.acc_sens)-ay_cal;
+	imu.gyr.y=((float)imu.rawgyr[1]/imu.gyr_sens*0.01745329252)-gy_cal; //rad
+	imu.acc.z=((float)imu.rawacc[2]/imu.acc_sens)-az_cal;
+	imu.gyr.z=((float)imu.rawgyr[2]/imu.gyr_sens*0.01745329252)-gz_cal; //rad
 
 	return 0;
 }
@@ -87,8 +87,8 @@ int imu_cal(void) {
 	printf("MAKE SURE THE IMU IS LEVEL. CALIBRATION STEP 1");
 	printf("\n\n");
 
-	for (int i=0; i<=60; i++)   {
-		int ret=imu_read_nc();
+	for (int i=0; i<60; i++)   {
+		imu_read_nc();
 	}
 
 	/*Nel secondo step campiono 50 valori, li sommo e ne faccio la media per portare i valori campionati vicino allo zero.*/
@@ -98,7 +98,7 @@ int imu_cal(void) {
 	printf("\n\n");
 	float accx_sum=0,accy_sum=0,accz_sum=0,pitch_sum=0,roll_sum=0,yaw_sum=0;
 	int err=-1;
-	for(int i=0;i<=50;i++)   {
+	for(int i=0;i<50;i++)   {
 		while (err!=0)   {
 			err=imu_read_nc();
 			if (err==0) continue;
@@ -107,22 +107,31 @@ int imu_cal(void) {
 				err = imu_read_nc();
 			}
 		}
-		accx_sum+=imu.acc.x*1000;
-		accy_sum+=imu.acc.y*1000;
-		accz_sum+=imu.acc.z*1000;
+		accx_sum+=imu.acc.x;
+		accy_sum+=imu.acc.y;
+		accz_sum+=imu.acc.z;
 
-		pitch_sum+=imu.gyr.x*1000;
-		roll_sum+=imu.gyr.y*1000;
-		yaw_sum+=imu.gyr.z*1000;
+		pitch_sum+=imu.gyr.x;
+		roll_sum+=imu.gyr.y;
+		yaw_sum+=imu.gyr.z;
 	}
 
-	ax=accx_sum/50;
-	ay=accy_sum/50;
-	az=accz_sum/50;
+	ax_cal=accx_sum/50;
+	ay_cal=accy_sum/50;
+	az_cal=accz_sum/50;
 
-	gx=pitch_sum/50;
-	gy=roll_sum/50;
-	gz=yaw_sum/50;
+	gx_cal=pitch_sum/50;
+	gy_cal=roll_sum/50;
+	gz_cal=yaw_sum/50;
+
+
+	/*printf("L'accelerazione lungo x e': %f\n\r",ax_cal);
+	printf("L'accelerazione lungo y e': %f\n\r",ay_cal);
+	printf("L'accelerazione lungo z e': %f\n\r",az_cal);
+
+	printf("Il rollio     (roll)  e': %f \n\r",gx_cal);
+	printf("Il beccheggio (pitch) e': %f \n\r",gy_cal);
+	printf("L' imbardata  (yaw)   e': %f \n\r",gz_cal);*/
 
 	return 0;
 }
